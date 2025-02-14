@@ -1,0 +1,47 @@
+image: docker:latest
+
+pipelines:
+  branches:
+    main:  # Runs only on the 'main' branch
+      - step:
+          name: Build and Push Multi-Target Docker Images
+          services:
+            - docker
+          caches:
+            - docker
+          script:
+            - echo "🚀 Starting Multi-Target CI/CD Pipeline"
+
+            # Enable multi-platform builds
+            - docker run --rm --privileged tonistiigi/binfmt --install all
+            - docker buildx create --use
+
+            # Log in to Docker Hub
+            - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
+
+            # Extract Git Commit ID
+            - export COMMIT_ID=$(echo $BITBUCKET_COMMIT | cut -c1-7)
+            - echo "🔹 Commit ID: $COMMIT_ID"
+
+            # Build and Push PHP Image
+            - echo "🔹 Building PHP Image..."
+            - docker buildx build --platform linux/amd64,linux/arm64 --target php \
+              -t ${DOCKER_HUB_USERSPACE}/php-sylius-app:$COMMIT_ID \
+              -t ${DOCKER_HUB_USERSPACE}/php-sylius-app:latest \
+              --push .
+
+            # Build and Push Nginx Image
+            - echo "🔹 Building Nginx Image..."
+            - docker buildx build --platform linux/amd64,linux/arm64 --target nginx \
+              -t ${DOCKER_HUB_USERSPACE}/nginx-sylius-app:$COMMIT_ID \
+              -t ${DOCKER_HUB_USERSPACE}/nginx-sylius-app:latest \
+              --push .
+
+            # Build and Push Node Image
+            - echo "🔹 Building Node Image..."
+            - docker buildx build --platform linux/amd64,linux/arm64 --target node \
+              -t ${DOCKER_HUB_USERSPACE}/node-sylius-app:$COMMIT_ID \
+              -t ${DOCKER_HUB_USERSPACE}/node-sylius-app:latest \
+              --push .
+
+            - echo "✅ All images built and pushed successfully!"
