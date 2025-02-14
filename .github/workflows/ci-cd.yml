@@ -1,0 +1,41 @@
+name: Multi-Target CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Runs on main branch push
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Extract Git Commit ID
+        run: echo "COMMIT_ID=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+
+      - name: Build and Push PHP Image
+        run: |
+          docker build --target php -t ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:latest .
+          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:${{ env.COMMIT_ID }}
+          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:latest
+
+      - name: Build and Push Nginx Image
+        run: |
+          docker build --target nginx -t ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:latest .
+          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:${{ env.COMMIT_ID }}
+          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:latest
+
+      - name: Build and Push Node Image
+        run: |
+          docker build --target node -t ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:latest .
+          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:${{ env.COMMIT_ID }}
+          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:latest
