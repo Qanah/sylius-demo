@@ -3,7 +3,7 @@ name: Multi-Target CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Runs on main branch push
+      - main-stop  # Runs on main branch push
 
 jobs:
   build-and-push:

@@ -3,7 +3,7 @@ name: Multi-Target-Platform CI/CD Pipeline
 on:
   push:
     branches:
-      - platform  # Runs on main branch push
+      - main  # Runs on main branch push
 
 jobs:
   build-and-push:
