@@ -28,7 +28,7 @@ jobs:
       - name: Build and Push PHP Multi-Platform Image
         run: |
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 \
+          docker buildx build --target php --platform linux/amd64,linux/arm64,linux/arm/v7 \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/php-sylius-app:${{ env.COMMIT_ID }} \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/php-sylius-app:latest \
             --push .
@@ -36,7 +36,7 @@ jobs:
       - name: Build and Push Nginx Multi-Platform Image
         run: |
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 \
+          docker buildx build --target nginx --platform linux/amd64,linux/arm64,linux/arm/v7 \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-sylius-app:${{ env.COMMIT_ID }} \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-sylius-app:latest \
             --push .
@@ -44,7 +44,7 @@ jobs:
       - name: Build and Push Node Multi-Platform Image
         run: |
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 \
+          docker buildx build --target node --platform linux/amd64,linux/arm64,linux/arm/v7 \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/node-sylius-app:${{ env.COMMIT_ID }} \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/node-sylius-app:latest \
             --push .
