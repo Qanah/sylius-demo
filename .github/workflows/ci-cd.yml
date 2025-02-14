@@ -24,18 +24,18 @@ jobs:
 
       - name: Build and Push PHP Image
         run: |
-          docker build --target php -t ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:latest .
+          docker build --target php -t ${{ secrets.DOCKER_HUB_USERSPACE }}/php-sylius-demo-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:latest .
           docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:${{ env.COMMIT_ID }}
           docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/php-app:latest
 
       - name: Build and Push Nginx Image
         run: |
-          docker build --target nginx -t ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:latest .
+          docker build --target nginx -t ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-sylius-demo-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:latest .
           docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:${{ env.COMMIT_ID }}
           docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/nginx-app:latest
 
       - name: Build and Push Node Image
         run: |
-          docker build --target node -t ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:latest .
+          docker build --target node -t ${{ secrets.DOCKER_HUB_USERSPACE }}/node-sylius-demo-app:${{ env.COMMIT_ID }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:latest .
           docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:${{ env.COMMIT_ID }}
           docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/node-app:latest
