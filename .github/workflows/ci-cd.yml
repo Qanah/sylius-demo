@@ -13,6 +13,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -24,18 +27,24 @@ jobs:
 
       - name: Build and Push PHP 7.4-fpm Image
         run: |
-          docker build --target sylius_php -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:7.4-fpm-${{ env.TAG_VERSION }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest ./images/php/7.4-fpm
-          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:7.4-fpm-${{ env.TAG_VERSION }}
-          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest
+          docker buildx create --use
+          docker buildx build --target sylius_php --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:7.4-fpm-${{ env.TAG_VERSION }} \
+            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest \
+            --push ./images/php/7.4-fpm
 
       - name: Build and Push Nginx 1.24 Image
         run: |
-          docker build --target sylius_nginx -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nginx:1.24-${{ env.TAG_VERSION }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nginx:latest ./images/nginx/1.24
-          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nginx:1.24-${{ env.TAG_VERSION }}
-          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nginx:latest
+          docker buildx create --use
+          docker buildx build --target sylius_nginx --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nginx:1.24-${{ env.TAG_VERSION }} \
+            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nginx:latest \
+            --push ./images/nginx/1.24
 
       - name: Build and Push Nodejs 12 Image
         run: |
-          docker build --target sylius_nodejs -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nodejs:12-${{ env.TAG_VERSION }} -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nodejs:latest ./images/nodejs/12
-          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nodejs:12-${{ env.TAG_VERSION }}
-          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nodejs:latest
+          docker buildx create --use
+          docker buildx build --target sylius_nodejs --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nodejs:12-${{ env.TAG_VERSION }} \
+            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nodejs:latest \
+            --push ./images/nodejs/12

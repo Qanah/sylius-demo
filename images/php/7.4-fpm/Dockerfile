@@ -41,7 +41,6 @@ COPY etc/php.ini        $PHP_INI_DIR/php.ini
 COPY etc/opcache.ini    $PHP_INI_DIR/conf.d/opcache.ini
 
 VOLUME /srv/sylius/var
-VOLUME /srv/sylius/public
 VOLUME /srv/sylius/public/media
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
