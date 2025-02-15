@@ -19,6 +19,8 @@ FROM mlocati/php-extension-installer:${PHP_EXTENSION_INSTALLER_VERSION} AS php_e
 # Sylius PHP image stage
 FROM php:${PHP_VERSION}-fpm-alpine${ALPINE_VERSION} AS sylius_php
 
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
 # Set working directory for the Sylius app
 WORKDIR /srv/sylius
 
@@ -29,16 +31,10 @@ RUN apk add --no-cache \
         gettext \
         unzip \
         git \
-        icu-dev \
-        libpng-dev \
-        libjpeg-turbo-dev \
-        freetype-dev \
-        libzip-dev \
-        libxml2-dev \
     ;
 
 # Copy PHP extension installer from previous image
-COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
+# COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
 
 # Install default PHP extensions using install-php-extensions
 RUN install-php-extensions apcu exif gd intl pdo_mysql opcache zip
