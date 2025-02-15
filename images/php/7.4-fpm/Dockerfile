@@ -27,17 +27,6 @@ RUN apk add --no-cache \
         gettext \
         unzip \
         git \
-        icu-dev \
-        libpng-dev \
-        libjpeg-turbo-dev \
-        freetype-dev \
-        libzip-dev \
-        libxml2-dev \
-        bash \
-        build-base \
-        autoconf \
-        bison \
-        re2c \
     ;
 
 COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
@@ -45,7 +34,14 @@ COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/b
 # default PHP image extensions
 # ctype curl date dom fileinfo filter ftp hash iconv json libxml mbstring mysqlnd openssl pcre PDO pdo_sqlite Phar
 # posix readline Reflection session SimpleXML sodium SPL sqlite3 standard tokenizer xml xmlreader xmlwriter zlib
-RUN install-php-extensions apcu exif gd intl pdo_mysql opcache zip
+
+RUN docker-php-ext-install apcu
+RUN docker-php-ext-install exif
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install intl
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install opcache
+RUN docker-php-ext-install zip
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY etc/php.ini        $PHP_INI_DIR/php.ini
