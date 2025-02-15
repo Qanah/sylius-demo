@@ -34,14 +34,14 @@ COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/b
 # default PHP image extensions
 # ctype curl date dom fileinfo filter ftp hash iconv json libxml mbstring mysqlnd openssl pcre PDO pdo_sqlite Phar
 # posix readline Reflection session SimpleXML sodium SPL sqlite3 standard tokenizer xml xmlreader xmlwriter zlib
-
-RUN docker-php-ext-install apcu
-RUN docker-php-ext-install exif
-RUN docker-php-ext-install gd
-RUN docker-php-ext-install intl
-RUN docker-php-ext-install pdo_mysql
-RUN docker-php-ext-install opcache
-RUN docker-php-ext-install zip
+#RUN install-php-extensions apcu exif gd intl pdo_mysql opcache zip
+RUN install-php-extensions apcu
+RUN install-php-extensions exif
+RUN install-php-extensions gd
+RUN install-php-extensions intl
+RUN install-php-extensions pdo_mysql
+RUN install-php-extensions opcache
+RUN install-php-extensions zip
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY etc/php.ini        $PHP_INI_DIR/php.ini
