@@ -31,6 +31,16 @@ RUN apk add --no-cache \
 
 COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
 
+# Install required dependencies for PHP extensions
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libxml2-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # default PHP image extensions
 # ctype curl date dom fileinfo filter ftp hash iconv json libxml mbstring mysqlnd openssl pcre PDO pdo_sqlite Phar
 # posix readline Reflection session SimpleXML sodium SPL sqlite3 standard tokenizer xml xmlreader xmlwriter zlib
