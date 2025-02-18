@@ -22,12 +22,12 @@ FROM php:${PHP_VERSION}-fpm-alpine${ALPINE_VERSION} AS sylius_php
 # Set working directory for the Sylius app
 WORKDIR /srv/sylius
 
+# Copy PHP extension installer from previous image
+COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
+
 # Install persistent / runtime dependencies and PHP extensions
 RUN apk add --no-cache acl file gettext unzip git curl bash \
     && install-php-extensions apcu exif gd intl pdo_mysql opcache zip
-
-# Copy PHP extension installer from previous image
-COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
 
 # Copy Composer from the previous image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
