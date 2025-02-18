@@ -22,29 +22,18 @@ FROM php:${PHP_VERSION}-fpm-alpine${ALPINE_VERSION} AS sylius_php
 # Set working directory for the Sylius app
 WORKDIR /srv/sylius
 
-# Install persistent / runtime dependencies
-RUN apk add --no-cache \
-        acl \
-        file \
-        gettext \
-        unzip \
-        git \
-        curl \
-        bash \
-    ;
+# Install persistent / runtime dependencies and PHP extensions
+RUN apk add --no-cache acl file gettext unzip git curl bash \
+    && install-php-extensions apcu exif gd intl pdo_mysql opcache zip
 
 # Copy PHP extension installer from previous image
 COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
 
-# Install default PHP extensions using install-php-extensions
-RUN install-php-extensions apcu exif gd intl pdo_mysql opcache zip
-
 # Copy Composer from the previous image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-# Install Symfony CLI
-RUN curl -sS https://get.symfony.com/cli/installer | bash \
-    && mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+# Install Symfony CLI directly in /usr/local/bin
+RUN curl -sS https://get.symfony.com/cli/installer | bash -s -- --install-dir=/usr/local/bin
 
 # Verify installation
 RUN symfony -V
