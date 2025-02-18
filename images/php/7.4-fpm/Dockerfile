@@ -19,9 +19,6 @@ FROM mlocati/php-extension-installer:${PHP_EXTENSION_INSTALLER_VERSION} AS php_e
 # Sylius PHP image stage
 FROM php:${PHP_VERSION}-fpm-alpine${ALPINE_VERSION} AS sylius_php
 
-# Set working directory for the Sylius app
-WORKDIR /srv/sylius
-
 # Copy PHP extension installer from previous image
 COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
 
@@ -41,6 +38,9 @@ RUN symfony -V
 # Copy custom php.ini and opcache.ini configurations
 COPY etc/php.ini $PHP_INI_DIR/php.ini
 COPY etc/opcache.ini $PHP_INI_DIR/conf.d/opcache.ini
+
+# Set working directory for the Sylius app
+WORKDIR /srv/sylius
 
 # Define volumes for persistent application data
 VOLUME /srv/sylius/var
