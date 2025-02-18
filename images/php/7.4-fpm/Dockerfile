@@ -29,6 +29,8 @@ RUN apk add --no-cache \
         gettext \
         unzip \
         git \
+        curl \
+        bash \
     ;
 
 # Copy PHP extension installer from previous image
@@ -39,6 +41,13 @@ RUN install-php-extensions apcu exif gd intl pdo_mysql opcache zip
 
 # Copy Composer from the previous image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+# Install Symfony CLI
+RUN curl -sS https://get.symfony.com/cli/installer | bash \
+    && mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+
+# Verify installation
+RUN symfony -V
 
 # Copy custom php.ini and opcache.ini configurations
 COPY etc/php.ini $PHP_INI_DIR/php.ini
