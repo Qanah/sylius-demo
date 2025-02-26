@@ -26,13 +26,19 @@ jobs:
         run: echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build and Push PHP 7.4-fpm Image
+#        run: |
+#          docker build --target sylius_php \
+#            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:7.4-fpm-${{ env.TAG_VERSION }} \
+#            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest \
+#            ./images/php/7.4-fpm
+#          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:7.4-fpm-${{ env.TAG_VERSION }}
+#          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest
         run: |
-          docker build --target sylius_php \
+          docker buildx create --use
+          docker buildx build --target sylius_php --platform linux/amd64,linux/arm64 \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:7.4-fpm-${{ env.TAG_VERSION }} \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest \
-            ./images/php/7.4-fpm
-          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:7.4-fpm-${{ env.TAG_VERSION }}
-          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest
+            --push ./images/php/7.4-fpm
 
       - name: Build and Push Nginx 1.24 Image
         run: |
