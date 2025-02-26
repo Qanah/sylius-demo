@@ -1,6 +1,6 @@
 ARG MYSQL_VERSION=8.0
 
-FROM mysql:${MYSQL_VERSION}
+FROM mysql:${MYSQL_VERSION} AS sylius_mysql
 
 # Copy custom MySQL entrypoint script
 COPY etc/mysql-entrypoint.sh /usr/local/bin/mysql-entrypoint.sh
