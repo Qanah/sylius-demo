@@ -49,3 +49,11 @@ jobs:
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nodejs:12-${{ env.TAG_VERSION }} \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-nodejs:latest \
             --push ./images/nodejs/12
+
+      - name: Build and Push Mysql 8.0 Image
+        run: |
+          docker buildx create --use
+          docker buildx build --target sylius_nodejs --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-mysql:8.0-${{ env.TAG_VERSION }} \
+            -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-mysql:latest \
+            --push ./images/mysql/8.0
