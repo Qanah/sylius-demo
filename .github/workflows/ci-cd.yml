@@ -35,7 +35,7 @@ jobs:
 #          docker push ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest
         run: |
           docker buildx create --use
-          docker buildx build --target sylius_php --platform linux/amd64,linux/arm64 \
+          docker buildx build --target sylius_php --platform linux/amd64 \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:7.4-fpm-${{ env.TAG_VERSION }} \
             -t ${{ secrets.DOCKER_HUB_USERSPACE }}/sylius-php:latest \
             --push ./images/php/7.4-fpm
